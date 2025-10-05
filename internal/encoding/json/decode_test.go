@@ -1203,6 +1203,21 @@ func TestDecoder(t *testing.T) {
 			},
 		},
 		{
+			in: `{""`},
+			want: []R{
+				{V: ObjectOpen},
+				{E: errEOF},
+			},
+		},
+		{
+			in: `{"":`,
+			want: []R{
+				{V: ObjectOpen},
+				{V: Name{""}},
+				{E: errEOF},
+			},
+		},
+		{
 			in: `{
 			  "number": 123e2,
 			  "bool"  : false,
