@@ -7,6 +7,7 @@ package dynamicpb_test
 import (
 	"strings"
 	"testing"
+	"unsafe"
 
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -100,6 +101,13 @@ func TestDynamicTypesFindMessageByName(t *testing.T) {
 }
 
 func TestDynamicTypesExtensionNotFound(t *testing.T) {
+	// Skip on 32-bit architectures due to atomic alignment issues with atomicExtFiles.
+	// This is a known issue that was fixed in v1.32.0 (commit 31694dbe).
+	// See: https://github.com/golang/protobuf/issues/1555
+	if unsafe.Sizeof(uintptr(0)) == 4 {
+		t.Skip("skipping on 32-bit arch due to atomic alignment issue (fixed in v1.32.0)")
+	}
+	
 	types := newTestTypes()
 	for _, name := range []protoreflect.FullName{
 		"string_field",
