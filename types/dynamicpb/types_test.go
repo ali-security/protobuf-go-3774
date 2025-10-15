@@ -107,7 +107,7 @@ func TestDynamicTypesExtensionNotFound(t *testing.T) {
 	if unsafe.Sizeof(uintptr(0)) == 4 {
 		t.Skip("skipping on 32-bit arch due to atomic alignment issue (fixed in v1.32.0)")
 	}
-	
+
 	types := newTestTypes()
 	for _, name := range []protoreflect.FullName{
 		"string_field",
